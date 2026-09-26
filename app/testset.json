@@ -1,0 +1,122 @@
+[
+  {
+    "query": "Track tension adjustment procedure",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 101}
+    ]
+  },
+  {
+    "query": "Daily inspection checklist before operation",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 56}
+    ]
+  },
+  {
+    "query": "How to change engine oil on SY335C",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  },
+  {
+    "query": "Engine oil filter replacement steps",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "Battery replacement procedure excavator",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 136}
+    ]
+  },
+  {
+    "query": "How to drain engine oil SY335C",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "Fan belt tension check procedure",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  },
+  {
+    "query": "Safety warnings when changing engine oil",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  },
+  {
+    "query": "Battery cable connection order positive negative",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 136}
+    ]
+  },
+  {
+    "query": "Risk of explosion battery poles confused",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 136}
+    ]
+  },
+  {
+    "query": "Overfilling engine oil consequences damage",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  },
+  {
+    "query": "Oil level dipstick H and L marks check",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "Maintenance position machine before service",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "How to open engine bonnet SY335C",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "Disposal of engine oil environmental safety",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 67}
+    ]
+  },
+  {
+    "query": "Protective gloves hot surfaces warning",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  },
+  {
+    "query": "Clamping plate battery removal steps",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 136}
+    ]
+  },
+  {
+    "query": "Grounding cable disconnect battery maintenance",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 136}
+    ]
+  },
+  {
+    "query": "Operator manual SY335C pre-operation checks",
+    "expected": [
+      {"source_file": "SY335_Operator_Manual.pdf", "page": 1}
+    ]
+  },
+  {
+    "query": "What consumables are recommended for the engine",
+    "expected": [
+      {"source_file": "SY335_Maintenance_EN.pdf", "page": 66}
+    ]
+  }
+]

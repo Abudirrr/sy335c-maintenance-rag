@@ -1,0 +1,25 @@
+Run the Application Instructions:
+cd sy335c-maintenance-rag
+.\.venv\Scripts\Activate.ps1
+uvicorn app.main:app --reload
+Open browser:
+http://127.0.0.1:8000
+
+If error (missing vector DB)
+python -m app.ingest
+uvicorn app.main:app --reload
+
+Quick test
+Track tension adjustment procedure
+
+Stop:
+CTRL + C
+
+2. Evaluation script (metrics test)
+
+Run this in terminal:
+
+python -m app.evaluate_steps
+
+
+

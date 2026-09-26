@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SY335C RAG Maintenance Assistant</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', path='favicon.ico') }}">
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.querySelector("form[data-form]");
+      const btn = document.querySelector("button[data-submit]");
+      const spinner = document.querySelector("[data-spinner]");
+      if (form && btn && spinner) {
+        form.addEventListener("submit", () => {
+          btn.disabled = true;
+          btn.classList.add("is-disabled");
+          spinner.classList.remove("hidden");
+          btn.querySelector("[data-btn-text]").textContent = "Working...";
+        });
+      }
+
+      document.querySelectorAll("[data-example]").forEach((el) => {
+        el.addEventListener("click", () => {
+          const ta = document.getElementById("query");
+          if (!ta) return;
+          ta.value = el.getAttribute("data-example") || "";
+          ta.focus();
+        });
+      });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="topbar">
+      <div class="topbar__inner">
+        <div class="brand">
+          <div class="brand__logo">SY</div>
+          <div>
+            <div class="brand__title">SY335C Maintenance Assistant</div>
+            <div class="brand__subtitle">Research Prototype · Manual Search · Evidence-Based Answers</div>
+          </div>
+        </div>
+
+        <div class="badges">
+          <span class="badge badge--blue">FAISS</span>
+          <span class="badge badge--blue">Embeddings</span>
+          <span class="badge badge--green">Citations</span>
+          <span class="badge badge--green">Confidence Scoring</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="grid">
+
+        <!-- LEFT SIDE -->
+        <div class="card card--sticky">
+          <div class="card__header">
+            <h2 class="card__title">Ask a maintenance question</h2>
+            <p class="card__hint">
+              Include subsystem, when it happens, symptoms, and fault codes for best retrieval.
+            </p>
+          </div>
+
+          <form method="post" action="/ask" data-form>
+            <label for="query" class="label">Symptom / question</label>
+            <textarea
+              id="query"
+              name="query"
+              class="textarea"
+              placeholder="e.g., Boom loses hydraulic pressure after warm-up. What should I check first?"
+              required
+            >{% if query %}{{ query }}{% endif %}</textarea>
+
+            <div class="actions">
+              <button class="btn" type="submit" data-submit>
+                <span class="btn__spinner hidden" data-spinner></span>
+                <span data-btn-text>Ask Assistant</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="stack">
+
+          {% if result %}
+
+          <!-- System Confidence -->
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">System Confidence</h2>
+              <p class="card__hint">Retrieval-score heuristic, not a guarantee of answer accuracy.</p>
+            </div>
+
+            <div class="confidence-block">
+              {% if result.confidence == "high" %}
+                <div class="alert alert--ok">
+                  <b>High Confidence</b> · Strong retrieval match  
+                  (top score {{ "%.3f"|format(result.top_score) }})
+                </div>
+              {% elif result.confidence == "medium" %}
+                <div class="alert alert--warn">
+                  <b>Medium Confidence</b> · Partial evidence match  
+                  (top score {{ "%.3f"|format(result.top_score) }})
+                </div>
+              {% else %}
+                <div class="alert alert--warn">
+                  <b>Low Confidence</b> · Weak match — refine query  
+                  (top score {{ "%.3f"|format(result.top_score) }})
+                </div>
+              {% endif %}
+            </div>
+          </section>
+
+          <!-- Answer -->
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Grounded Answer</h2>
+              <p class="card__hint">Generated from retrieved evidence. Verify every instruction against the official manual.</p>
+            </div>
+            <pre class="answer">{{ result.answer_text }}</pre>
+          </section>
+
+          <!-- Citations -->
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Citations</h2>
+              <p class="card__hint">Manual sections used for grounding.</p>
+            </div>
+
+            {% if result.citations|length == 0 %}
+              <div class="empty">No citations available.</div>
+            {% else %}
+              <ul class="citations">
+                {% for c in result.citations %}
+                  <li class="citation">
+                    <div>
+                      <span class="citation__file">{{ c.source_file }}</span>
+                      <span class="citation__meta">
+                        page {{ c.page }} · score {{ "%.3f"|format(c.score) }}
+                      </span>
+                    </div>
+                    <div class="citation__id">
+                      chunk: {{ c.id }}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </section>
+
+          <!-- Evidence Preview -->
+          <section class="card">
+            <div class="card__header">
+              <h2 class="card__title">Evidence Preview</h2>
+              <p class="card__hint">Top retrieved chunks (expand to inspect).</p>
+            </div>
+
+            {% if result.evidence_preview|length == 0 %}
+              <div class="empty">No evidence returned.</div>
+            {% else %}
+              <div class="evidence-list">
+                {% for e in result.evidence_preview %}
+                  <details class="evidence" {% if loop.index == 1 %}open{% endif %}>
+                    <summary class="evidence__summary">
+                      <span class="evidence__title">
+                        {{ e.source_file }} · page {{ e.page }}
+                      </span>
+                      <span class="evidence__meta">
+                        score {{ "%.3f"|format(e.score) }}
+                      </span>
+                    </summary>
+                    <div class="evidence__id">
+                      chunk id: {{ e.id }}
+                    </div>
+                    <pre class="evidence__text">{{ e.snippet }}</pre>
+                  </details>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </section>
+
+          {% else %}
+
+          <!-- Empty State -->
+          <section class="card">
+            <div class="empty-state">
+              <div class="empty-state__icon">🛠️</div>
+              <div class="empty-state__title">Ready for SY335C troubleshooting</div>
+              <div class="empty-state__text">
+                Ask a question to retrieve grounded manual evidence with confidence scoring.
+              </div>
+            </div>
+          </section>
+
+          {% endif %}
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Academic Prototype · Retrieval-Augmented Generation · Evidence Grounding · SY335C RAG Assistant
+    </footer>
+  </div>
+</body>
+</html>
